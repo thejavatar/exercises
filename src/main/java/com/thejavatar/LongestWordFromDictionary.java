@@ -134,20 +134,21 @@ public class LongestWordFromDictionary {
          * We call this a potential of the node to produce an n length word {@link #maxLength}.
          */
         public Integer decomposeWord(String word, Integer length) {
-            if (!children.containsKey(word.charAt(0))) {
-                children.put(word.charAt(0), new Node(word.charAt(0), length));
+            char currentCharacter = word.charAt(0);
+            if (!children.containsKey(currentCharacter)) {
+                children.put(currentCharacter, new Node(currentCharacter, length));
             }
             if (word.length() > 1) {
-                Integer possibleMaxHeight = children.get(word.charAt(0)).decomposeWord(word.substring(1), ++length);
+                Integer possibleMaxHeight = children.get(currentCharacter).decomposeWord(word.substring(1), ++length);
                 this.maxLength = Math.max(possibleMaxHeight, this.maxLength);
             } else {
-                children.get(word.charAt(0)).endWord(length);
+                children.get(currentCharacter).putWordTermination(length);
                 this.maxLength = length;
             }
             return this.maxLength;
         }
 
-        private void endWord(Integer length) {
+        private void putWordTermination(Integer length) {
             children.put(WORD_TERMINATION, new Node(WORD_TERMINATION, length));
         }
 
