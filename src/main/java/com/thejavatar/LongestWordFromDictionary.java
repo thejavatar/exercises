@@ -22,7 +22,7 @@ public class LongestWordFromDictionary {
         System.out.println("Longest words: " + Arrays.toString(longestWords.toArray()));
     }
 
-    public static Dictionary buildDictionary(String ... words) {
+    public static Dictionary buildDictionary(String... words) {
         Dictionary dictionary = new Dictionary();
         for (String word : words) {
             dictionary.add(word);
@@ -171,6 +171,7 @@ public class LongestWordFromDictionary {
 
     private static class FindLongestWordTreeTraverser implements TreeTraverser {
 
+        private static final String ANY_CHARACTER_SYMBOL = "?";
         private final List<String> potentialLongestWords = new ArrayList<>();
         private final String availableLetters;
         private Integer longestWordThreshold = 0;
@@ -195,12 +196,27 @@ public class LongestWordFromDictionary {
                     potentialLongestWords.add(potentialLongestWord);
                 }
                 for (Node children : node.getChildren().values()) {
-                    if (availableLetters.indexOf(children.getLetter()) != -1) {
-                        final String remainingLetters = availableLetters.replaceFirst(String.valueOf(children.getLetter()), "");
+                    String matchingLetter = checkIfThereIsAnyMatch(availableLetters, children);
+                    if (matchingLetter != null) {
+                        final String remainingLetters = availableLetters.replaceFirst(String.valueOf(matchingLetter), "");
                         processNode(children, remainingLetters, accumulatedWord + (node.isWordStart() ? "" : node.getLetter()));
                     }
                 }
             }
+        }
+
+        /**
+         * Check whether the letter in children is still available (is part of String available letters) or otherwise if
+         * availableLetters contains {@link #ANY_CHARACTER_SYMBOL}.
+         */
+        private String checkIfThereIsAnyMatch(String availableLetters, Node children) {
+            String matchingCharacter = null;
+            if (availableLetters.indexOf(children.getLetter()) != -1) {
+                matchingCharacter = String.valueOf(children.getLetter());
+            } else if (availableLetters.indexOf(ANY_CHARACTER_SYMBOL) != -1) {
+                matchingCharacter = "\\" + ANY_CHARACTER_SYMBOL;
+            }
+            return matchingCharacter;
         }
 
         public List<String> getLongestWords() {

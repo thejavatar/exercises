@@ -19,14 +19,16 @@ class LongestWordFromDictionaryTest extends Specification {
             expectLongestWords.size() == foundLongestWords.size()
             expectLongestWords.intersect(foundLongestWords).size() == expectLongestWords.size()
         where:
-            dictionary                            | availableLetters || expectLongestWords
-            buildDictionary("cat", "act", "bad")  | "act"            || ["cat", "act"]
-            buildDictionary("cat", "act", "cats") | "acts"           || ["cats"]
-            buildDictionary("boom", "at", "a")    | "abtom"          || ["at"]
-            buildDictionary("boom", "at", "a")    | "aobtom"         || ["boom"]
-            buildDictionary()                     | "aobtom"         || []
-            buildDictionary("boom", "at", "a")    | ""               || []
-            buildDictionary("boom", "at", "a")    | "zzz"            || []
+            dictionary                                     | availableLetters  || expectLongestWords
+            buildDictionary("cat", "act", "bad")           | "act"             || ["cat", "act"]
+            buildDictionary("cat", "act", "cats")          | "acts"            || ["cats"]
+            buildDictionary("boom", "at", "a")             | "abtom"           || ["at"]
+            buildDictionary("boom", "at", "a")             | "aobtom"          || ["boom"]
+            buildDictionary()                              | "aobtom"          || []
+            buildDictionary("boom", "at", "a")             | ""                || []
+            buildDictionary("boom", "at", "a")             | "zzz"             || []
+            buildDictionary("boom", "booms", "at")         | "abt?om"          || ["boom"]
+            buildDictionary("boom", "booms", "dictionary") | "???bo????oms???" || ["dictionary"]
     }
 
 }
