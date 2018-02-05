@@ -196,27 +196,23 @@ public class LongestWordFromDictionary {
                     potentialLongestWords.add(potentialLongestWord);
                 }
                 for (Node child : node.getChildren().values()) {
-                    Optional<String> matchedUsing = checkIfThereIsAnyMatch(availableLetters, child);
-                    if (matchedUsing.isPresent()) {
-                        final String remainingLetters = availableLetters.replaceFirst(String.valueOf(matchedUsing.get()), "");
+                    final String remainingLetters = removeChildLetterFromAvailableLetters(child.getLetter(), availableLetters);
+                    final boolean childLetterWasMatched = availableLetters.length() != remainingLetters.length();
+                    if (childLetterWasMatched) {
                         processNode(child, remainingLetters, accumulatedWord + (node.isWordStart() ? "" : node.getLetter()));
                     }
                 }
             }
         }
 
-        /**
-         * Check whether the letter in child can be used (is part of String available letters) or otherwise if
-         * availableLetters contains {@link #ANY_CHARACTER_SYMBOL}.
-         */
-        private Optional<String> checkIfThereIsAnyMatch(String availableLetters, Node child) {
-            String matchedUsing = null;
-            if (availableLetters.indexOf(child.getLetter()) != -1) {
-                matchedUsing = String.valueOf(child.getLetter());
-            } else if (availableLetters.indexOf(ANY_CHARACTER_SYMBOL) != -1) {
-                matchedUsing = "\\" + ANY_CHARACTER_SYMBOL;
+        private String removeChildLetterFromAvailableLetters(Character letter, String availableLetters) {
+            if(availableLetters.indexOf(letter) != -1) {
+                return availableLetters.replaceFirst(String.valueOf(letter), "");
+            } else if(availableLetters.contains(ANY_CHARACTER_SYMBOL)) {
+                return availableLetters.replaceFirst("\\" + ANY_CHARACTER_SYMBOL, "");
+            } else {
+                return availableLetters;
             }
-            return Optional.ofNullable(matchedUsing);
         }
 
         public List<String> getLongestWords() {
