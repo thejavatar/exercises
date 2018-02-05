@@ -195,24 +195,24 @@ public class LongestWordFromDictionary {
                     }
                     potentialLongestWords.add(potentialLongestWord);
                 }
-                for (Node children : node.getChildren().values()) {
-                    String matchingLetter = checkIfThereIsAnyMatch(availableLetters, children);
+                for (Node child : node.getChildren().values()) {
+                    String matchingLetter = checkIfThereIsAnyMatch(availableLetters, child);
                     if (matchingLetter != null) {
                         final String remainingLetters = availableLetters.replaceFirst(String.valueOf(matchingLetter), "");
-                        processNode(children, remainingLetters, accumulatedWord + (node.isWordStart() ? "" : node.getLetter()));
+                        processNode(child, remainingLetters, accumulatedWord + (node.isWordStart() ? "" : node.getLetter()));
                     }
                 }
             }
         }
 
         /**
-         * Check whether the letter in children is still available (is part of String available letters) or otherwise if
+         * Check whether the letter in child can be used (is part of String available letters) or otherwise if
          * availableLetters contains {@link #ANY_CHARACTER_SYMBOL}.
          */
-        private String checkIfThereIsAnyMatch(String availableLetters, Node children) {
+        private String checkIfThereIsAnyMatch(String availableLetters, Node child) {
             String matchingCharacter = null;
-            if (availableLetters.indexOf(children.getLetter()) != -1) {
-                matchingCharacter = String.valueOf(children.getLetter());
+            if (availableLetters.indexOf(child.getLetter()) != -1) {
+                matchingCharacter = String.valueOf(child.getLetter());
             } else if (availableLetters.indexOf(ANY_CHARACTER_SYMBOL) != -1) {
                 matchingCharacter = "\\" + ANY_CHARACTER_SYMBOL;
             }
