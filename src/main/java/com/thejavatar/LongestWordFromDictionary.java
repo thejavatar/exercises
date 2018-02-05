@@ -196,9 +196,9 @@ public class LongestWordFromDictionary {
                     potentialLongestWords.add(potentialLongestWord);
                 }
                 for (Node child : node.getChildren().values()) {
-                    String matchingLetter = checkIfThereIsAnyMatch(availableLetters, child);
-                    if (matchingLetter != null) {
-                        final String remainingLetters = availableLetters.replaceFirst(String.valueOf(matchingLetter), "");
+                    Optional<String> matchedUsing = checkIfThereIsAnyMatch(availableLetters, child);
+                    if (matchedUsing.isPresent()) {
+                        final String remainingLetters = availableLetters.replaceFirst(String.valueOf(matchedUsing.get()), "");
                         processNode(child, remainingLetters, accumulatedWord + (node.isWordStart() ? "" : node.getLetter()));
                     }
                 }
@@ -209,14 +209,14 @@ public class LongestWordFromDictionary {
          * Check whether the letter in child can be used (is part of String available letters) or otherwise if
          * availableLetters contains {@link #ANY_CHARACTER_SYMBOL}.
          */
-        private String checkIfThereIsAnyMatch(String availableLetters, Node child) {
-            String matchingCharacter = null;
+        private Optional<String> checkIfThereIsAnyMatch(String availableLetters, Node child) {
+            String matchedUsing = null;
             if (availableLetters.indexOf(child.getLetter()) != -1) {
-                matchingCharacter = String.valueOf(child.getLetter());
+                matchedUsing = String.valueOf(child.getLetter());
             } else if (availableLetters.indexOf(ANY_CHARACTER_SYMBOL) != -1) {
-                matchingCharacter = "\\" + ANY_CHARACTER_SYMBOL;
+                matchedUsing = "\\" + ANY_CHARACTER_SYMBOL;
             }
-            return matchingCharacter;
+            return Optional.ofNullable(matchedUsing);
         }
 
         public List<String> getLongestWords() {
